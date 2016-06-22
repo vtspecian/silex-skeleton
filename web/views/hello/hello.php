@@ -1,1 +1,1 @@
-Olá <?= $data['nome']; ?>
+Olá <?= $nome; ?>

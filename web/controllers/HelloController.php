@@ -1,18 +1,11 @@
 <?php
+$controller = $app['controllers_factory'];
 
-$hello = $app['controllers_factory'];
-
-$hello->get('/{name}', function ($name) use ($app) {
-
-	$view = 'views/hello/hello.php';
-
+$controller->get('/{name}', function ($name) use ($app) {
 	$data = [
 		'nome' => $app->escape($name)
 	];
-
-	include $view;
-	
-	return '';
+	return $app['templating-hello']->render('hello.php', $data);
 });
 
-return $hello;
+return $controller;
