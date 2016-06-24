@@ -11,6 +11,11 @@ $app = new Silex\Application();
 //Exibe erros na tela
 $app['debug'] = true;
 
+//registra conexões com o banco de dados
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    'dbs.options' => include 'config/database.php',
+));
+
 //carrega todos os controllers
 $dirControllers   	= 'controllers/';
 $pastaControllers 	= opendir($dirControllers);
