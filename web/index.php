@@ -33,7 +33,8 @@ while ($arquivo = readdir($pastaControllers)){
       //registrando template engine deste controller
       $app['templating-'.$controllerName] = $app->share(function() use($controllerName) {
         $loader = new FilesystemLoader(array(
-          __DIR__.'\views\\'.$controllerName.'\%name%'
+          __DIR__.'\views\\'.$controllerName.'\%name%',
+          __DIR__.'\views\templates\%name%'
         ));
         $nameParser = new TemplateNameParser();
         $templating = new PhpEngine($nameParser, $loader);
