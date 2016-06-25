@@ -21,6 +21,9 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'dbs.options' => include 'config/database.php',
 ));
 
+//registrando sessão
+$app->register(new Silex\Provider\SessionServiceProvider());
+
 //carrega todos os models e middlewares
 include('models/autoload.php');
 include('middlewares/autoload.php');
@@ -46,7 +49,7 @@ while ($arquivo = readdir($pastaMiddlewares)){
 
       if(is_object($ObjMiddleware)){
         $middleware[strtolower($middlewareExplode[0])] = function (Request $request, Application $app) use($ObjMiddleware) {    
-            return $ObjMiddleware->validate();
+            return $ObjMiddleware->validate($request, $app);
         };
       }
     }
