@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__.'/../vendor/autoload.php';
 
+//Para o uso nos middlewares
+use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
+
 //Template engine php
 use Symfony\Component\Templating\PhpEngine;
 use Symfony\Component\Templating\TemplateNameParser;
@@ -17,13 +21,37 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'dbs.options' => include 'config/database.php',
 ));
 
-$app->before(function (Request $request, Application $app) {
-    /*
-    //Controle de acesso
-    if(){
-      return new RedirectResponse('/login');
-    }*/
-});
+//carrega todos os models e middlewares
+include('models/autoload.php');
+include('middlewares/autoload.php');
+
+//onde será carregado o middleware
+$middleware = array();
+
+//carrega todos os middlewares
+$dirMiddlewares     = 'middlewares/';
+$pastaMiddlewares   = opendir($dirMiddlewares);
+
+while ($arquivo = readdir($pastaMiddlewares)){
+
+  //verificação para exibir apenas os arquivos e nao os caminhos para diretorios superiores 
+  if ($arquivo != '.' && $arquivo != '..'){
+
+    //verifica se o sufixo é Middleware
+    $middlewareExplode = explode('Middleware', $arquivo);    
+    if(sizeof($middlewareExplode) == 2){
+
+      $middlewareClassName = explode('.php', $arquivo);
+      $ObjMiddleware = new $middlewareClassName[0]();
+
+      if(is_object($ObjMiddleware)){
+        $middleware[strtolower($middlewareExplode[0])] = function (Request $request, Application $app) use($ObjMiddleware) {    
+            return $ObjMiddleware->validate();
+        };
+      }
+    }
+  }
+}
 
 //carrega todos os controllers
 $dirControllers   	= 'controllers/';

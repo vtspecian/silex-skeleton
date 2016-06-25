@@ -1,8 +1,5 @@
 <?php
 
-//include de models que serão utilizados
-include('models/ProdutoModel.php');
-
 $controller = $app['controllers_factory'];
 
 $controller->get('/{name}', function ($name) use ($app) {
@@ -16,6 +13,7 @@ $controller->get('/{name}', function ($name) use ($app) {
   ];
   
   return $app['templating-hello']->render('hello.php', $data);
-});
+
+})->before($middleware['session']);
 
 return $controller;
