@@ -18,8 +18,6 @@ $controller->get('/teste/{name}', function ($name) use ($app) {
 
 $controller->get('/valida-sessao', function () use ($app) {	
   return $app['templating-hello']->render('hello2.php');
-
 })->before($middleware['session']);
-
 
 return $controller;

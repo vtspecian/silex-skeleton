@@ -9,5 +9,4 @@ abstract class BaseModel{
 		$this->app 	= $app;
 		$this->db 	= $app['dbs']['mysql'];
 	}
-
 }

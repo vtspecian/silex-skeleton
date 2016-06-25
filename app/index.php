@@ -28,14 +28,13 @@ $app->register(new Silex\Provider\SessionServiceProvider());
 include('models/autoload.php');
 include('middlewares/autoload.php');
 
-//onde será carregado o middleware
+//onde será carregado os middlewares
 $middleware = array();
 
 //carrega todos os middlewares
-$dirMiddlewares     = 'middlewares/';
-$pastaMiddlewares   = opendir($dirMiddlewares);
+$dirMiddlewares = opendir('middlewares/');
 
-while ($arquivo = readdir($pastaMiddlewares)){
+while ($arquivo = readdir($dirMiddlewares)){
 
   //verificação para exibir apenas os arquivos e nao os caminhos para diretorios superiores 
   if ($arquivo != '.' && $arquivo != '..'){
@@ -44,9 +43,13 @@ while ($arquivo = readdir($pastaMiddlewares)){
     $middlewareExplode = explode('Middleware', $arquivo);    
     if(sizeof($middlewareExplode) == 2){
 
-      $middlewareClassName = explode('.php', $arquivo);
-      $ObjMiddleware = new $middlewareClassName[0]();
+      //Pega o nome da classe
+      $middlewareFileExplode = explode('.php', $arquivo);
 
+      //Instância a classe
+      $ObjMiddleware = new $middlewareFileExplode[0]();
+
+      //Se for um objeto, adiciona na array de middlewares
       if(is_object($ObjMiddleware)){
         $middleware[strtolower($middlewareExplode[0])] = function (Request $request, Application $app) use($ObjMiddleware) {    
             return $ObjMiddleware->validate($request, $app);
@@ -57,10 +60,9 @@ while ($arquivo = readdir($pastaMiddlewares)){
 }
 
 //carrega todos os controllers
-$dirControllers   	= 'controllers/';
-$pastaControllers 	= opendir($dirControllers);
+$dirControllers 	= opendir('controllers/');
 
-while ($arquivo = readdir($pastaControllers)){
+while ($arquivo = readdir($dirControllers)){
 
   //verificação para exibir apenas os arquivos e nao os caminhos para diretorios superiores 
   if ($arquivo != '.' && $arquivo != '..'){
@@ -76,9 +78,9 @@ while ($arquivo = readdir($pastaControllers)){
           __DIR__.'\views\\'.$controllerName.'\%name%',
           __DIR__.'\views\templates\%name%'
         ));
+        
         $nameParser = new TemplateNameParser();
         $templating = new PhpEngine($nameParser, $loader);
-
         $templating->set(new SlotsHelper());
 
         return $templating;

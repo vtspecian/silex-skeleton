@@ -16,6 +16,5 @@ class SessionMiddleware implements IMiddleware{
 	    if(!$session->get('user')){
 	      return new RedirectResponse('teste/Victor');
 	    }
-	   	
 	}
 }
