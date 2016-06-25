@@ -1,4 +1,4 @@
-<?php echo $view->render('header.php') ?>
+<?php $view->extend('layout.php') ?>
 
 Olá <?= $nome; ?>
 <br>
@@ -10,5 +10,3 @@ foreach($produtos as $val){
 	echo $val['id']." - ".$val['nome']."<br>";
 }
 ?>
-
-<?php echo $view->render('footer.php') ?>

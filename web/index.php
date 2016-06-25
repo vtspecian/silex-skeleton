@@ -5,6 +5,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 use Symfony\Component\Templating\PhpEngine;
 use Symfony\Component\Templating\TemplateNameParser;
 use Symfony\Component\Templating\Loader\FilesystemLoader;
+use Symfony\Component\Templating\Helper\SlotsHelper;
 
 $app = new Silex\Application();
 
@@ -15,6 +16,14 @@ $app['debug'] = true;
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
     'dbs.options' => include 'config/database.php',
 ));
+
+$app->before(function (Request $request, Application $app) {
+    /*
+    //Controle de acesso
+    if(){
+      return new RedirectResponse('/login');
+    }*/
+});
 
 //carrega todos os controllers
 $dirControllers   	= 'controllers/';
@@ -38,6 +47,9 @@ while ($arquivo = readdir($pastaControllers)){
         ));
         $nameParser = new TemplateNameParser();
         $templating = new PhpEngine($nameParser, $loader);
+
+        $templating->set(new SlotsHelper());
+
         return $templating;
       });
 

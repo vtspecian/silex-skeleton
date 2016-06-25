@@ -4,3 +4,6 @@
 		<meta charset="UTF-8">
 	</head>
 	<body>
+		<?php $view['slots']->output('_content') ?>
+	</body>
+</html>
